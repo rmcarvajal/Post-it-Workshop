@@ -3,7 +3,7 @@ const addButton = document.getElementById('add-note-button');
 const notesContainer = document.getElementById('notes-container');
 const toggleThemeButton = document.getElementById('toggle-theme-button');
 const body = document.body;
-const colors = ['note-yellow'];
+const colors = ['note-yellow' , 'note-blue', 'note-pink'];
 
 function createNoteElement(text, colorClass) {
     const noteDiv = document.createElement('div');
@@ -22,12 +22,23 @@ function loadNotes() {
     const storedNotes = [];
     console.log(storedNotes);
     if (storedNotes) {
-        const notes = JSON.parse(storedNotes);
+        const notes = JSON.parse(localStorage.getItem('storedNotes')); //it actually reads local storage now
         notes.forEach(noteData => {
             const newNote = createNoteElement(noteData.text, noteData.color);
             notesContainer.appendChild(newNote);
         });
     }
+}
+
+//attempt to save in local storage
+function saveNotes() {
+    const storedNotes = [];
+
+    const notes = document.querySelectorAll('.note')
+
+    storedNotes.push(notes)
+
+    localStorage.setItem('storedNotes', JSON.stringify(storedNotes))
 }
 
 function setInitialTheme() {
@@ -89,8 +100,7 @@ addButton.addEventListener('click', () => {
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const newNote = createNoteElement(noteText, randomColor);
         notesContainer.appendChild(newNote);
-        const newNoteErr = createNoteElement(noteText, randomColor);
-        notesContainer.appendChild(newNoteErr);
+        //error line that only created duplicated notes
         noteInput.value = '';
         addButton.disabled = true;
         saveNotes();
